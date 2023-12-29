@@ -74,7 +74,7 @@ function validateResult(result) {
 }
 
 function handleError(res, error) {
-    res.status(500).json({ status: 'error', message: error.message });
+    res.status(400).json({ status: 'error', message: error.message });
 }
 
 const server = app.listen(4000, () => {

@@ -57,8 +57,8 @@ app.post('/divide', (req, res) => {
     try {
         const { num1, num2 } = req.body;
         if (Number(num2) === 0) {
-            res.end('Cannot divide by zero');
             res.status(400);
+            res.end('Cannot divide by zero');
         }
         const result = Number(num1) / Number(num2);
         validateResult(result);

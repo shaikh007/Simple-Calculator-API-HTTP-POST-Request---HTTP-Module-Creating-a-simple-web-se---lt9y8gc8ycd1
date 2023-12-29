@@ -10,70 +10,72 @@ app.use(bodyParser.json());
 
 //Write POST endpoint to get the sum of two number
 app.post('/add', (req, res) => {
-    const { num1, num2 } = req.body;
+    try {
+        const { num1, num2 } = req.body;
+        const result = Number(num1) + Number(num2);
 
-    if (typeof num1 !== 'number' || typeof num2 !== 'number') {
-        return res.status(400).json({ status: 'error', message: 'Invalid data types' });
+        validateResult(result);
+
+        res.json({ result });
+    } catch (error) {
+        handleError(res, error);
     }
-
-    if (num1 > 1000000 || num2 > 1000000 || num1 + num2 > 1000000) {
-        return res.status(400).json({ status: 'error', message: 'Overflow' });
-    }
-
-    const result = num1 + num2;
-    res.json({ result });
 });
 
 
 //Write POST endpoint to get the differance of two number
 app.post('/subtract', (req, res) => {
-    const { num1, num2 } = req.body;
+    try {
+        const { num1, num2 } = req.body;
+        const result = Number(num1) - Number(num2);
 
-    if (typeof num1 !== 'number' || typeof num2 !== 'number') {
-        return res.status(400).json({ status: 'error', message: 'Invalid data types' });
+        validateResult(result);
+
+        res.json({ result });
+    } catch (error) {
+        handleError(res, error);
     }
-
-    if (num1 < -1000000 || num2 < -1000000 || num1 - num2 < -1000000) {
-        return res.status(400).json({ status: 'error', message: 'Underflow' });
-    }
-
-    const result = num1 - num2;
-    res.json({ result });
 });
 
 
 //Write POST endpoint to get the multiplication of two number
 app.post('/multiply', (req, res) => {
-    const { num1, num2 } = req.body;
+    try {
+        const { num1, num2 } = req.body;
+        const result = Number(num1) * Number(num2);
 
-    if (typeof num1 !== 'number' || typeof num2 !== 'number') {
-        return res.status(400).json({ status: 'error', message: 'Invalid data types' });
+        validateResult(result);
+
+        res.json({ result });
+    } catch (error) {
+        handleError(res, error);
     }
-
-    if (num1 > 1000000 || num2 > 1000000 || num1 * num2 > 1000000) {
-        return res.status(400).json({ status: 'error', message: 'Overflow' });
-    }
-
-    const result = num1 * num2;
-    res.json({ result });
 });
 
 //Write POST endpoint to check if the num2 is 0 or not and to get the result after dividing two number
 app.post('/divide', (req, res) => {
-    const { num1, num2 } = req.body;
-
-    if (typeof num1 !== 'number' || typeof num2 !== 'number') {
-        return res.status(400).json({ status: 'error', message: 'Invalid data types' });
+    try {
+        const { num1, num2 } = req.body;
+        if (Number(num2) === 0) {
+            throw new Error('Cannot divide by zero');
+        }
+        const result = Number(num1) / Number(num2);
+        validateResult(result);
+        res.json({ result });
+    } catch (error) {
+        handleError(res, error);
     }
-
-    if (num2 === 0) {
-        return res.status(400).json({ status: 'error', message: 'Cannot divide by zero' });
-    }
-
-    const result = num1 / num2;
-    res.json({ result });
 });
 
+function validateResult(result) {
+    if (result < -1000000 || result > 1000000) {
+        throw new Error('Overflow or Underflow');
+    }
+}
+
+function handleError(res, error) {
+    res.status(500).json({ status: 'error', message: error.message });
+}
 
 const server = app.listen(4000, () => {
     console.log(`Server running on port 4000`);

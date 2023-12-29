@@ -10,20 +10,17 @@ app.use(bodyParser.json());
 
 //Write POST endpoint to get the sum of two number
 app.post('/add', (req, res) => {
-    const { num1, num2 } = req.query;
+    const { num1, num2 } = req.body;
 
-    const parsedNum1 = parseFloat(num1);
-    const parsedNum2 = parseFloat(num2);
-
-    if (isNaN(parsedNum1) || isNaN(parsedNum2)) {
+    if (typeof num1 !== 'number' || typeof num2 !== 'number') {
         return res.status(400).json({ status: 'error', message: 'Invalid data types' });
     }
 
-    if (parsedNum1 > 1000000 || parsedNum2 > 1000000 || parsedNum1 + parsedNum2 > 1000000) {
+    if (num1 > 1000000 || num2 > 1000000 || num1 + num2 > 1000000) {
         return res.status(400).json({ status: 'error', message: 'Overflow' });
     }
 
-    const result = parsedNum1 + parsedNum2;
+    const result = num1 + num2;
     res.json({ result });
 });
 
